@@ -20,6 +20,8 @@
     "sequelize-cli": "^5.4.0"
   },
   "devDependencies": {
-    "prettier": "^1.16.4"
+    "prettier": "^1.16.4",
+    "webpack": "^4.29.3",
+    "webpack-cli": "^3.2.3"
   }
 }
