@@ -1,16 +1,18 @@
 const passport = require("passport");
+const User = require("../models/index").user;
 
 /**
  * @see http://www.passportjs.org/docs/downloads/html/
  */
 class PassportService {
   static setup() {
-    passport.serializeUser((username, done) => {
-      done(null, username);
+    passport.serializeUser((user, done) => {
+      done(null, user.id);
     });
 
-    passport.deserializeUser((username, done) => {
-      done(null, { name: username });
+    passport.deserializeUser(async (id, done) => {
+      const user = await User.findById(id);
+      done(null, user);
     });
 
     this.setupLocalStrategy();
@@ -23,11 +25,14 @@ class PassportService {
           usernameField: "username",
           passwordField: "password"
         },
-        (username, password, done) => {
-          if (username === "test" && password === "test") {
-            return done(null, username);
+        async (username, password, done) => {
+          // TODO username should be unique(or create an email column for a unique value)
+          const user = await User.findOne({ where: { name: username, password: password } });
+          if (user.name === username && user.password === password) {
+            return done(null, user);
+          } else {
+            return done(null, false, { message: "invalid" });
           }
-          return done(null, false, { message: "invalid" });
         }
       )
     );
