@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  form(action="/signin" method="post")
+    .username
+      label username
+      input(type="text" name="username")
+    .password
+      label password
+      input(type="password" name="password")
+    .signin
+      input(type="submit")
